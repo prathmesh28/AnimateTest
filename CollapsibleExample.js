@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   Switch,
   ScrollView,
@@ -11,6 +11,7 @@ import {
 import * as Animatable from 'react-native-animatable';
 import Collapsible from 'react-native-collapsible';
 import Accordion from 'react-native-collapsible/Accordion';
+import CrossMarker from './CrossMarker';
 
 const BACON_IPSUM =
   'Bacon ipsum dolor amet chuck turducken landjaeger tongue spare ribs. Picanha beef prosciutto meatball turkey shoulder shank salami cupim doner jowl pork belly cow. Chicken shankle rump swine tail frankfurter meatloaf ground round flank ham hock tongue shank andouille boudin brisket. ';
@@ -60,10 +61,10 @@ export default class CollapsibleExample extends Component {
   };
 
   toggleExpanded = () => {
-    this.setState({ collapsed: !this.state.collapsed });
+    this.setState({collapsed: !this.state.collapsed});
   };
 
-  setSections = (sections) => {
+  setSections = sections => {
     this.setState({
       activeSections: sections.includes(undefined) ? [] : sections,
     });
@@ -74,9 +75,9 @@ export default class CollapsibleExample extends Component {
       <Animatable.View
         duration={400}
         style={[styles.header, isActive ? styles.active : styles.inactive]}
-        transition="backgroundColor"
-      >
+        transition="backgroundColor">
         <Text style={styles.headerText}>{section.title}</Text>
+        <CrossMarker isOpen={isActive} height={15} width={2} />
       </Animatable.View>
     );
   };
@@ -86,9 +87,10 @@ export default class CollapsibleExample extends Component {
       <Animatable.View
         duration={400}
         style={[styles.content, isActive ? styles.active : styles.inactive]}
-        transition="backgroundColor"
-      >
-        <Animatable.Text animation={isActive ? 'bounceIn' : undefined}>
+        transition="backgroundColor">
+        <Animatable.Text
+        // animation={isActive ? 'bounceIn' : undefined}
+        >
           {section.content}
         </Animatable.Text>
       </Animatable.View>
@@ -96,36 +98,34 @@ export default class CollapsibleExample extends Component {
   }
 
   render() {
-    const { multipleSelect, activeSections } = this.state;
+    const {multipleSelect, activeSections} = this.state;
 
     return (
       <View style={styles.container}>
-        <ScrollView contentContainerStyle={{ paddingTop: 30 }}>
+        <ScrollView contentContainerStyle={{paddingTop: 30}}>
           <Text style={styles.title}>Accordion Example</Text>
 
           <View style={styles.multipleToggle}>
             <Text style={styles.multipleToggle__title}>Multiple Select?</Text>
             <Switch
               value={multipleSelect}
-              onValueChange={(a) => this.setState({ multipleSelect: a })}
+              onValueChange={a => this.setState({multipleSelect: a})}
             />
           </View>
 
           <View style={styles.selectors}>
             <Text style={styles.selectTitle}>Select:</Text>
 
-            {SELECTORS.map((selector) => (
+            {SELECTORS.map(selector => (
               <TouchableOpacity
                 key={selector.title}
-                onPress={() => this.setSections([selector.value])}
-              >
+                onPress={() => this.setSections([selector.value])}>
                 <View style={styles.selector}>
                   <Text
                     style={
                       activeSections.includes(selector.value) &&
                       styles.activeSelector
-                    }
-                  >
+                    }>
                     {selector.title}
                   </Text>
                 </View>
@@ -154,6 +154,8 @@ export default class CollapsibleExample extends Component {
             renderHeader={this.renderHeader}
             renderContent={this.renderContent}
             duration={400}
+            easing={'linear'}
+            align={'bottom'}
             onChange={this.setSections}
             renderAsFlatList={false}
           />
@@ -176,11 +178,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   header: {
+    borderWidth: 0.5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     backgroundColor: '#F5FCFF',
     padding: 10,
   },
   headerText: {
-    textAlign: 'center',
+    // textAlign: 'center',
     fontSize: 16,
     fontWeight: '500',
   },
